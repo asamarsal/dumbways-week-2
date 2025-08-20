@@ -24,6 +24,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import error from "next/error";
 
 const choosemood = [
   {
@@ -142,29 +143,33 @@ export default function Chatbot() {
     setAnswer("");
     setYoutubeLink("");
 
-    startTransition(async () => {
-      try {
-        const json = await generateFromGemini({
-          choosemood: valueMood,           // dari dropdown Mood
-          message: mood,                   // dari textarea
-          songCategory: valueSongcategory, // dari dropdown Category (opsional)
+    startTransition(() => {
+      generateFromGemini({
+        choosemood: valueMood,           // dari dropdown Mood
+        message: mood,                   // dari textarea
+        songCategory: valueSongcategory, // dari dropdown Category (opsional)
+      })
+        .then((json) => {
+          console.log("Raw API Response:", json);
+
+          const text =
+            json?.candidates?.[0]?.content?.parts?.[0]?.text ??
+            JSON.stringify(json, null, 2);
+
+          // Ambil URL YouTube pertama dari jawaban
+          const urlMatch = text.match(/https?:\/\/[^\s)]+/);
+          const link = urlMatch?.[0] || "";
+          setYoutubeLink(link);
+
+          setAnswer(text);
+        })
+        .catch((e: unknown) => {
+          if (e instanceof Error) {
+            setErr(e.message);
+          } else {
+            setErr("Unexpected error occurred");
+          }
         });
-
-        console.log("Raw API Response:", json);
-
-        const text =
-          json?.candidates?.[0]?.content?.parts?.[0]?.text ??
-          JSON.stringify(json, null, 2);
-
-        // Ambil URL YouTube pertama dari jawaban
-        const urlMatch = text.match(/https?:\/\/[^\s)]+/);
-        const link = urlMatch?.[0] || "";
-        setYoutubeLink(link);
-
-        setAnswer(text);
-      } catch (e: any) {
-        setErr(e?.message || "Unexpected error");
-      }
     });
   };
 

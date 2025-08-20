@@ -108,6 +108,7 @@ export default function Home() {
 
       </div>
       <LogoLoop
+            className="pt-6"
             logos={imageLogos}
             speed={120}
             direction="left"
@@ -116,7 +117,7 @@ export default function Home() {
             pauseOnHover
             scaleOnHover
             fadeOut
-            fadeOutColor="#ffffff"
+            fadeOutColor="transparent"
             ariaLabel="Technology partners"
           />
     </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   useCallback,
   useEffect,
@@ -64,17 +66,23 @@ const useResizeObserver = (
   elements: Array<React.RefObject<Element | null>>,
   dependencies: React.DependencyList
 ) => {
-  useEffect(() => {
-    if (!("ResizeObserver" in window)) {
+  useEffect(() => {=
+    if (typeof window === "undefined") return;
+
+    type SafeWindow = Window & typeof globalThis;
+    const win = window as SafeWindow;
+
+    if (!("ResizeObserver" in win)) {
       const handleResize = () => callback();
-      window.addEventListener("resize", handleResize);
+      win.addEventListener("resize", handleResize);
       callback();
-      return () => window.removeEventListener("resize", handleResize);
+      return () => win.removeEventListener("resize", handleResize);
     }
 
     const observers = elements.map((ref) => {
       if (!ref.current) return null;
-      const observer = new ResizeObserver(callback);
+      const RO = (win as SafeWindow).ResizeObserver as typeof ResizeObserver;
+      const observer = new RO(callback);
       observer.observe(ref.current);
       return observer;
     });
@@ -86,6 +94,7 @@ const useResizeObserver = (
     };
   }, dependencies);
 };
+
 
 const useImageLoader = (
   seqRef: React.RefObject<HTMLUListElement | null>,

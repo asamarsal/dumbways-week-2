@@ -300,18 +300,41 @@ export default function Chatbot() {
             <div className="w-full rounded-xl bg-white/70 p-4 text-sm space-y-3">
               <div className="mb-2">
                 {videoId ? (
-                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
-                    <iframe
-                      width="560"
-                      height="315"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      title="YouTube video player"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                      className="w-full aspect-video rounded-xl"
-                    />
+                  <div className="flex flex-col">
+
+                    <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                      <iframe
+                        width="560"
+                        height="315"
+                        src={`https://www.youtube.com/embed/${videoId}`}
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                        className="w-full aspect-video rounded-xl"
+                      />
+                    </div>
+
+                    <div className="flex flex-row pt-4 bb-4 gap-2">
+                      <p>
+                        Share to :
+                      </p>
+
+                      <button
+                        onClick={() => alert("Share to Instagram")}
+                        className="flex items-center"
+                      >
+                        <img
+                          src="/instagram-icon.svg"
+                          alt="Instagram"
+                          className="w-5 h-5"
+                        />
+
+                      </button>
+                    </div>
+                    
                   </div>
+                  
                 ) : (
                   <span className="text-gray-500">Tidak ada link YouTube ditemukan</span>
                 )}

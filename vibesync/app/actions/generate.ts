@@ -1,9 +1,9 @@
 "use server";
 
 type GenerateParams = {
-  choosemood: string;    // dari dropdown mood
-  message: string;       // dari textarea
-  songCategory?: string; // dari dropdown kategori lagu (opsional)
+  choosemood: string;    
+  message: string;       
+  songCategory?: string; 
 };
 
 export async function generateFromGemini({

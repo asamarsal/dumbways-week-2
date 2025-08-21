@@ -77,7 +77,7 @@ export default function Home() {
             <AccordionContent className="flex flex-col gap-4 text-balance">
               <p>
                 Choose your mood right now, choose category song that you want to hear 
-                and fill "Tell me your day..." and press send.
+                and fill Tell me your day... and press send.
               </p>
               <p>
                 After that, music recommendations will be appear for you to listen.

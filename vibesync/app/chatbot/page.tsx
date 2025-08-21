@@ -11,6 +11,8 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
+import Navbar from "@/components/navbar";
+
 import {
   Command,
   CommandEmpty,
@@ -156,7 +158,7 @@ export default function Chatbot() {
             json?.candidates?.[0]?.content?.parts?.[0]?.text ??
             JSON.stringify(json, null, 2);
 
-          // Ambil URL YouTube pertama dari jawaban
+          // Ambil URL YouTube dari response API
           const urlMatch = text.match(/https?:\/\/[^\s)]+/);
           const link = urlMatch?.[0] || "";
           setYoutubeLink(link);
@@ -185,6 +187,9 @@ export default function Chatbot() {
       />
 
       <div className="z-10 w-full max-w-3xl flex flex-col items-center gap-8">
+
+          <Navbar/>
+
           <Image
             className="dark:invert"
             src="/vibesync-icon-black.png"

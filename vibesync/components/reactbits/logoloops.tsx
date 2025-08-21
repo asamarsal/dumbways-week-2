@@ -66,23 +66,34 @@ const useResizeObserver = (
   dependencies: React.DependencyList
 ) => {
   useEffect(() => {
+    // Hanya jalan di browser
     if (typeof window === "undefined") return;
 
-    if (!("ResizeObserver" in window)) {
+    // Ikat ke var bertipe jelas (bukan never)
+    const win = window as Window & typeof globalThis;
+
+    // Cek ketersediaan ResizeObserver TANPA 'in' operator
+    const hasResizeObserver =
+      typeof (win as Window & typeof globalThis).ResizeObserver !== "undefined";
+
+    if (!hasResizeObserver) {
       const handleResize = () => callback();
-      window.addEventListener("resize", handleResize);
+      win.addEventListener("resize", handleResize);
+      // trigger pertama agar ukuran terukur
       callback();
-      return () => window.removeEventListener("resize", handleResize);
+      return () => win.removeEventListener("resize", handleResize);
     }
 
+    // Gunakan ResizeObserver bila ada
     const observers = elements.map((ref) => {
       const el = ref.current;
       if (!el) return null;
-      const observer = new ResizeObserver(() => callback());
+      const observer = new win.ResizeObserver(() => callback());
       observer.observe(el);
       return observer;
     });
 
+    // trigger pertama agar ukuran terukur
     callback();
 
     return () => {
@@ -90,8 +101,6 @@ const useResizeObserver = (
     };
   }, dependencies);
 };
-
-
 
 const useImageLoader = (
   seqRef: React.RefObject<HTMLUListElement | null>,

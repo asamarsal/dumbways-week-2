@@ -58,7 +58,6 @@ const cx = (...parts: Array<string | false | null | undefined>) =>
   parts.filter(Boolean).join(" ");
 
 const isNodeItem = (item: LogoItem): item is NodeLogoItem =>
-  // discriminant: properti `node` hanya ada di NodeLogoItem
   (item as NodeLogoItem).node !== undefined;
 
 const useResizeObserver = (
@@ -66,24 +65,21 @@ const useResizeObserver = (
   elements: Array<React.RefObject<Element | null>>,
   dependencies: React.DependencyList
 ) => {
-  useEffect(() => {=
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
-    type SafeWindow = Window & typeof globalThis;
-    const win = window as SafeWindow;
-
-    if (!("ResizeObserver" in win)) {
+    if (!("ResizeObserver" in window)) {
       const handleResize = () => callback();
-      win.addEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize);
       callback();
-      return () => win.removeEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
 
     const observers = elements.map((ref) => {
-      if (!ref.current) return null;
-      const RO = (win as SafeWindow).ResizeObserver as typeof ResizeObserver;
-      const observer = new RO(callback);
-      observer.observe(ref.current);
+      const el = ref.current;
+      if (!el) return null;
+      const observer = new ResizeObserver(() => callback());
+      observer.observe(el);
       return observer;
     });
 
@@ -94,6 +90,7 @@ const useResizeObserver = (
     };
   }, dependencies);
 };
+
 
 
 const useImageLoader = (
